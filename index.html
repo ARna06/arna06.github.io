@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARna06</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        margin: 2rem;
+        line-height: 1.5;
+      }
+
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+
+      ul {
+        padding-left: 1.2rem;
+      }
+
+      .muted {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ARna06</h1>
+    <p class="muted">A brief overview of my GitHub repositories.</p>
+
+    <section>
+      <h2>Repositories</h2>
+      <ul id="repo-list">
+        <li>Loading repositories...</li>
+      </ul>
+    </section>
+
+    <script>
+      const username = "ARna06";
+      const repoList = document.getElementById("repo-list");
+
+      fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`)
+        .then((response) => response.json())
+        .then((repos) => {
+          if (!Array.isArray(repos) || repos.length === 0) {
+            repoList.innerHTML = "<li>No repositories found.</li>";
+            return;
+          }
+
+          repoList.innerHTML = repos
+            .map((repo) => {
+              const description = repo.description ? ` — ${repo.description}` : "";
+              return `<li><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a>${description}</li>`;
+            })
+            .join("");
+        })
+        .catch(() => {
+          repoList.innerHTML = `<li>Unable to load repositories right now. Visit <a href="https://github.com/${username}">github.com/${username}</a>.</li>`;
+        });
+    </script>
+  </body>
+</html>
